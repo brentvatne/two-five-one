@@ -1,21 +1,44 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, TextInput } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-export default function App() {
+import { enableScreens } from 'react-native-screens';
+enableScreens();
+
+const AppStack = createStackNavigator();
+
+function Screen1() {
+  const [value, onChangeText] = React.useState('');
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ScrollView contentContainerStyle={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <TextInput
+        placeholder='Input'
+        style={{ borderWidth: 1, width: '75%', padding: 10 }}
+        onChangeText={text => onChangeText(text)}
+        value={value}
+      />
+    </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const USE_REACT_NAVIGATION = true;
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <KeyboardAvoidingView behavior='padding' style={{ flex: 1 }}>
+        {
+          USE_REACT_NAVIGATION ?
+              <NavigationContainer>
+                <AppStack.Navigator>
+                  <AppStack.Screen name='App' component={Screen1} />
+                </AppStack.Navigator>
+              </NavigationContainer>
+            :
+              <Screen1 />
+        }
+      </KeyboardAvoidingView>
+    );
+  }
+}
